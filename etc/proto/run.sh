@@ -42,7 +42,7 @@ Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,\
 done
 
 pushd src > /dev/stderr
-read -ra proto_files < <(find . -name "*.proto" -print0 | xargs -0)
+read -ra proto_files < <(find . -name "*.proto" | sort | xargs)
 protoc \
     --proto_path . \
     --plugin=protoc-gen-pach="${GOPATH}/bin/protoc-gen-pach" \

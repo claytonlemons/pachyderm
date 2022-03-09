@@ -4,6 +4,8 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"log"
+	"os"
 	"path"
 	"strings"
 	"text/template"
@@ -94,6 +96,16 @@ func (gen *TransactionClientGenerator) AddProto(proto *descriptor.FileDescriptor
 }
 
 func (gen *TransactionClientGenerator) Finish() (*plugin.CodeGeneratorResponse_File, error) {
+	l := log.New(os.Stderr, "", 0)
+	for _, p := range gen.Protos {
+		l.Println("Proto:", p.GetName())
+		for _, s := range p.Service {
+			l.Println("\tService:", s.GetName())
+			for _, m := range s.GetMethod() {
+				l.Println("\t\tMethod: ", m.GetName())
+			}
+		}
+	}
 	buf := &bytes.Buffer{}
 	if err := outTemplate.Execute(buf, gen); err != nil {
 		return nil, err
