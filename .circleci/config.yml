@@ -199,6 +199,20 @@ jobs:
             cd /home/circleci/dist-pach/pachctl/
             gcsupload -b pachyderm-builds -f `find * -name \*.tar.gz` -k /home/circleci/gcpcreds.json
             rm /home/circleci/gcpcreds.json
+  push-redhat:
+    docker:
+      - image: ubuntu:22.04
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Install Goreleaser
+          command: |
+            echo 'deb [trusted=yes] https://repo.goreleaser.com/apt/ /' | sudo tee /etc/apt/sources.list.d/goreleaser.list
+            sudo apt update
+            sudo apt install goreleaser
+      - run: etc/redhat/push_images.sh
 
 
 workflows:
