@@ -144,9 +144,9 @@ jobs:
       - checkout
       - run: |
           echo "$DOCKER_PWD" | docker login --username pachydermbuildbot --password-stdin
-      - run: 
+      - run:
           command: etc/testing/circle/run_hub_load_tests.sh
-          no_output_timeout: 1h 
+          no_output_timeout: 1h
       - store_artifacts:
           path: /tmp/debug-dump
           destination: debug-dump
@@ -168,6 +168,21 @@ jobs:
       - run: etc/testing/circle/start-minikube.sh
       - run: etc/testing/circle/build.sh
       - run: etc/testing/circle/deploy_test.sh
+  push-redhat:
+    docker:
+      - image: ubuntu:22.04
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Install Goreleaser
+          command: |
+            echo 'deb [trusted=yes] https://repo.goreleaser.com/apt/ /' | sudo tee /etc/apt/sources.list.d/goreleaser.list
+            sudo apt update
+            sudo apt install goreleaser
+      - run: etc/redhat/push_images.sh
+
 
 workflows:
   circleci:
