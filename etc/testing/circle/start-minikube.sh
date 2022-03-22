@@ -34,6 +34,18 @@ for _ in $(seq 36); do
   sleep 5
 done
 
+# try to restart docker service
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+
+# Try to connect for three minutes again
+for _ in $(seq 36); do
+  if kubectl version &>/dev/null; then
+    exit 0
+  fi
+  sleep 5
+done
+
 # Give up--kubernetes isn't coming up
 minikube delete
 sleep 30 # Wait for minikube to go completely down

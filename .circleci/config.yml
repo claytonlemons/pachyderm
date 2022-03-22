@@ -3,6 +3,7 @@ version: 2.1
 
 orbs:
   go: circleci/go@1.6.0
+  jira: circleci/jira@1.0.5
 
 parameters:
   run_flaky_tests:
@@ -199,7 +200,7 @@ jobs:
             cd /home/circleci/dist-pach/pachctl/
             gcsupload -b pachyderm-builds -f `find * -name \*.tar.gz` -k /home/circleci/gcpcreds.json
             rm /home/circleci/gcpcreds.json
-
+      - jira/notify
 
 workflows:
   circleci:
