@@ -11,6 +11,7 @@ minikube_args=(
   "--kubernetes-version=${VERSION}"
   "--cpus=7"
   "--memory=12Gi"
+  "--wait=all"
 )
 while getopts ":v" opt; do
   case "${opt}" in
@@ -27,18 +28,6 @@ done
 minikube start "${minikube_args[@]}"
 
 # Try to connect for three minutes
-for _ in $(seq 36); do
-  if kubectl version &>/dev/null; then
-    exit 0
-  fi
-  sleep 5
-done
-
-# try to restart docker service
-sudo systemctl daemon-reload
-sudo systemctl restart docker
-
-# Try to connect for three minutes again
 for _ in $(seq 36); do
   if kubectl version &>/dev/null; then
     exit 0
